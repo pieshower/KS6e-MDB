@@ -11,7 +11,7 @@ AnalogRead::AnalogRead()
 
     // Set the ADC reference voltage to AVCC
     ADMUX |= (1 << REFS0);
-    
+
     // Enable the ADC and set the prescaler to 128
     ADCSRA |= (1 << ADEN) | (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 
@@ -38,3 +38,4 @@ int AnalogRead::read(int pin)
     return ADC;
 
 }
+
