@@ -6,6 +6,8 @@
     per letter, or input. Each pin is an analog voltage
     representation of the average temperature of 3 cells.
 
+    Am I correct on this?
+
 */
 
 
@@ -16,12 +18,12 @@
 #include <Arduino.h>
 
 
-// ------------------------------------
+// -------------------------------------------------
 // Number of total channels
 
 #define  CHANNELS  4
 
-// ------------------------------------
+// --------------------------------------------------
 // Each channel is the average temp of
 // 3 packs
 
@@ -30,7 +32,8 @@
 #define  CHANNEL3  2
 #define  CHANNEL4  3
 
-// ---------------------------------------
+// --------------------------------------------------
+// Just a more organized way of storing the temps
 
 typedef struct temperature
 {

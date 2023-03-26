@@ -2,9 +2,10 @@
 
 #include "TempSensor.h"
 #include "SPI_handle.h"
-// #include "MDB_Labels.h"
 
 
+// ------------------------------------------------
+// Initializes the SPI pins, mode, and CS
 
 void init_SPI()
 {
@@ -16,6 +17,9 @@ void init_SPI()
 
 }
 
+
+// -------------------------------------------------
+// Sends through SPI. Maybe this works?
 
 void send_SPI(uint32_t id, uint8_t buf[])
 {
