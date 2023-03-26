@@ -11,6 +11,9 @@
 #define CHIPSELECT 9
 
 
+// ---------------------------------------------------
+// Just a more organized way of storing the messages
+
 typedef struct SPI_message_t
 {
 
@@ -23,6 +26,9 @@ typedef struct SPI_message_t
 
 } SPI_message_t;
 
+
+// ----------------------------------------------------
+// Functions for SPI (Maybe they work lol)
 
 void init_SPI();
 
