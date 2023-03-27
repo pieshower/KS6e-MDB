@@ -19,7 +19,7 @@ int tempPins[] = {18, 19, 20, 21};
 
 
 
-// ------------------------------------------------
+// ----------------------------------------------------
 // Updates the temps from each pins into an array
 
 void TempSensor::updateTemp()
