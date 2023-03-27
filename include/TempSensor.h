@@ -16,6 +16,7 @@
 
 
 #include <Arduino.h>
+#include "AnalogRead.h"
 
 
 // -------------------------------------------------
@@ -50,7 +51,17 @@ typedef struct temperature
 class TempSensor
 {
 
+private:
+
+    temperature tempSensor;
+
+    AnalogRead data;
+
 public:
+
+    TempSensor() {};
+
+    ~TempSensor() {};
 
     void updateTemp();
 

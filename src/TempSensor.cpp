@@ -2,7 +2,7 @@
 
 #include "TempSensor.h"
 #include "MDB_Labels.h"
-#include "AnalogRead.h"
+
 
 
 // ------------------------------------------------
@@ -18,13 +18,6 @@ int tempPins[] = {18, 19, 20, 21};
 // int tempPins[] = {PC0, PC1, PC2, PC3};
 
 
-// -----------------------------------------------------
-// Object and Type creation
-
-temperature tempSenor;
-
-AnalogRead data;
-
 
 // ------------------------------------------------
 // Updates the temps from each pins into an array
@@ -32,10 +25,10 @@ AnalogRead data;
 void TempSensor::updateTemp()
 {
 
-    for (int i = 0; i < CHANNELS; i++)
+    for (int CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
     {
 
-        tempSenor.temp[i] = data.read(tempPins[i]);
+        this->tempSensor.temp[CHANNEL] = this->data.read(tempPins[CHANNEL]);
 
     }
 
@@ -48,7 +41,7 @@ void TempSensor::updateTemp()
 uint8_t TempSensor::getTemp(int channel)
 {
 
-    return tempSenor.temp[channel];
+    return this->tempSensor.temp[channel];
 
 }
 
@@ -62,26 +55,26 @@ void TempSensor::AvgTemp()
     uint8_t minTemp[CHANNELS] = { 0 };
     uint8_t maxTemp[CHANNELS] = { 0 };
 
-    for (int i = 0; i < CHANNELS; i++)
+    for (int CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
     {
 
-        minTemp[i] = this->getTemp(i); 
+        minTemp[CHANNEL] = this->getTemp(CHANNEL); 
 
     }
 
     this->updateTemp();
 
-    for (int i = 0; i < CHANNELS; i++)
+    for (int CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
     {
 
-        maxTemp[i] = this->getTemp(i);
+        maxTemp[CHANNEL] = this->getTemp(CHANNEL);
 
     }
 
-    for (int i = 0; i < CHANNELS; i++)
+    for (int CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
     {
 
-        tempSenor.avgTemp[i] = (minTemp[i] + maxTemp[i]) / 2;
+        this->tempSensor.avgTemp[CHANNEL] = (minTemp[CHANNEL] + maxTemp[CHANNEL]) / 2;
 
     }
 
@@ -94,7 +87,7 @@ void TempSensor::AvgTemp()
 uint8_t *TempSensor::getAvgTemp()
 {
 
-    return tempSenor.avgTemp;
+    return this->tempSensor.avgTemp;
 
 }
 
