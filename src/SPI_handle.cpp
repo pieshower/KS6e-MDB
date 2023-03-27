@@ -27,7 +27,7 @@ void send_SPI(uint32_t id, uint8_t buf[])
 
     SPI_message_t msg;
 
-    msg.id = id;
+    msg.id |= (uint32_t)id;
 
     // Load buffer with Temperature array 
 
@@ -64,7 +64,7 @@ void send_SPI(uint32_t id, uint8_t buf[])
     // transfer identity
 
     SPI.transfer(msg.len);
-    SPI.transfer(msg.id);
+    SPI.transfer((uint32_t)msg.id);
 
     digitalWrite(CHIPSELECT, LOW);
 
