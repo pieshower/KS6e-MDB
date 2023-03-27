@@ -4,7 +4,6 @@
 #define SPI_HANDLE_H
 
 
-#include <Arduino.h>
 #include <SPI.h>
 
 

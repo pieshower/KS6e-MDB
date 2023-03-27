@@ -4,9 +4,6 @@
 #define MDB_LABELS_H
 
 
-#include <Arduino.h>
-
-
 // #define TEMP_PIN  8
 // #define HUMID_PIN 9
 

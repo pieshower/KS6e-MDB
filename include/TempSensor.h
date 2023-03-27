@@ -15,7 +15,6 @@
 #define TEMPSENSOR_H
 
 
-#include <Arduino.h>
 #include "AnalogRead.h"
 
 
