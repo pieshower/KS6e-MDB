@@ -28,6 +28,7 @@ void send_SPI(uint32_t id, uint8_t buf[])
 
     msg.id = id;
 
+    // Load buffer with Temperature array 
 
     for (int i = 0; i < CHANNELS; i++)
     {
@@ -36,7 +37,11 @@ void send_SPI(uint32_t id, uint8_t buf[])
 
     }
 
+    // enable CAN controller to recieve data
+
     digitalWrite(CHIPSELECT, HIGH);
+
+    // transfer data
 
     for (int i = msg.len; i > 0; i--)
     {
@@ -45,15 +50,17 @@ void send_SPI(uint32_t id, uint8_t buf[])
 
     }
 
-    // for (int i = 0; i < msg.len; i++)
-    // {
+    for (int i = 0; i < msg.len; i++)
+    {
 
-    //     Serial.print("buffer ");
-    //     Serial.print(i);
-    //     Serial.print(": ");
-    //     Serial.println(msg.buf[i]);
+        Serial.print("buffer ");
+        Serial.print(i);
+        Serial.print(": ");
+        Serial.println(msg.buf[i]);
 
-    // }
+    }
+
+    // transfer identity
 
     SPI.transfer(msg.len);
     SPI.transfer(msg.id);
