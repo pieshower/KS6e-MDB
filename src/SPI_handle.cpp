@@ -12,7 +12,7 @@ void init_SPI()
 
     SPI.begin();
 
-    SPI.beginTransaction(SPISettings(9600, MSBFIRST, SPI_MODE0));
+    SPI.beginTransaction(SPISettings(9600, LSBFIRST, SPI_MODE0));
 
     pinMode(CHIPSELECT, OUTPUT);
 
@@ -27,29 +27,38 @@ void send_SPI(uint32_t id, uint8_t buf[])
 
     SPI_message_t msg;
 
-    msg.id |= (uint32_t)id;
+    uint64_t buffer;
+
+    msg.id |= id;
+
+
 
     // Load buffer with Temperature array 
 
-    for (int INDEX = 0; INDEX < CHANNELS; INDEX++)
+    for (uint8_t INDEX = 0; INDEX < sizeof(buf); INDEX++)
     {
 
         msg.buf[INDEX] = buf[INDEX];
 
     }
 
-    // enable CAN controller to recieve data
-
-    digitalWrite(CHIPSELECT, HIGH);
-
-    // transfer data
-
     for (int INDEX = msg.len; INDEX > 0; INDEX--)
     {
 
-        SPI.transfer(msg.buf[INDEX - 1]);
+        buffer |= (msg.buf[INDEX] << ((INDEX * 8) - 8));
 
     }
+
+
+
+    // SPI.beginTransaction(SPISettings(9600, LSBFIRST, SPI_MODE0));
+
+    // enable CAN controller to recieve data
+
+    digitalWrite(CHIPSELECT, LOW);
+
+    // transfer data
+
 
     // for (int i = 0; i < msg.len; i++)
     // {
@@ -63,10 +72,14 @@ void send_SPI(uint32_t id, uint8_t buf[])
 
     // transfer identity
 
-    SPI.transfer(msg.len);
-    SPI.transfer((uint32_t)msg.id);
+    SPI.transfer(msg.buf, msg.len);
 
-    digitalWrite(CHIPSELECT, LOW);
+    SPI.transfer(msg.len);
+    SPI.transfer(msg.id);
+
+    SPI.endTransaction();
+
+    digitalWrite(CHIPSELECT, HIGH);
 
 }
 

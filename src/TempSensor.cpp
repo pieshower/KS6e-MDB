@@ -25,7 +25,7 @@ int tempPins[] = {PC0, PC1, PC2, PC3};
 void TempSensor::updateTemp()
 {
 
-    for (int CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
+    for (uint8_t CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
     {
 
         this->tempSensor.temp[CHANNEL] = this->data.read(tempPins[CHANNEL]);
@@ -55,7 +55,7 @@ void TempSensor::AvgTemp()
     uint8_t minTemp[CHANNELS] = { 0 };
     uint8_t maxTemp[CHANNELS] = { 0 };
 
-    for (int CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
+    for (uint8_t CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
     {
 
         minTemp[CHANNEL] = this->getTemp(CHANNEL); 
@@ -64,14 +64,14 @@ void TempSensor::AvgTemp()
 
     this->updateTemp();
 
-    for (int CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
+    for (uint8_t CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
     {
 
         maxTemp[CHANNEL] = this->getTemp(CHANNEL);
 
     }
 
-    for (int CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
+    for (uint8_t CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
     {
 
         this->tempSensor.avgTemp[CHANNEL] = (minTemp[CHANNEL] + maxTemp[CHANNEL]) / 2;
