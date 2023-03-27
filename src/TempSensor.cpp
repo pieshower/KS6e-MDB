@@ -4,16 +4,26 @@
 #include "MDB_Labels.h"
 #include "AnalogRead.h"
 
+
+// ------------------------------------------------
+// Input pins for the NANO
+
 //                 A   B   C   D
-//int tempPins[] = {18, 19, 20, 21};
+int tempPins[] = {18, 19, 20, 21};
 
-int tempPins[] = {PC0, PC1, PC2, PC3};
 
+// ---------------------------------------------------
+// Input pins for the uno
+
+// int tempPins[] = {PC0, PC1, PC2, PC3};
+
+
+// -----------------------------------------------------
+// Object and Type creation
 
 temperature tempSenor;
 
 AnalogRead data;
-
 
 
 // ------------------------------------------------
@@ -33,7 +43,7 @@ void TempSensor::updateTemp()
 
 
 // ----------------------------------------------------
-// Returns the temperture of a channel (ABCD)
+// Returns the temperture of a channel (A B C D)
 
 uint8_t TempSensor::getTemp(int channel)
 {
