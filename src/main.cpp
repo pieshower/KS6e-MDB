@@ -19,6 +19,19 @@
 
 */
 
+
+/*
+
+    Found a possible SPI to CAN mega library.
+    This is not mine.
+
+    Need to implement and test. :)
+
+*/
+
+
+
+
 #include <Arduino.h>
 
 #include "TempSensor.h"
