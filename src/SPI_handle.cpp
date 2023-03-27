@@ -29,7 +29,7 @@ void send_SPI(uint32_t id, uint8_t buf[])
     msg.id = id;
 
 
-    for (int i = 0; i < msg.len; i++)
+    for (int i = 0; i < CHANNELS; i++)
     {
 
         msg.buf[i] = buf[i];
@@ -44,6 +44,16 @@ void send_SPI(uint32_t id, uint8_t buf[])
         SPI.transfer(msg.buf[i - 1]);
 
     }
+
+    // for (int i = 0; i < msg.len; i++)
+    // {
+
+    //     Serial.print("buffer ");
+    //     Serial.print(i);
+    //     Serial.print(": ");
+    //     Serial.println(msg.buf[i]);
+
+    // }
 
     SPI.transfer(msg.len);
     SPI.transfer(msg.id);
