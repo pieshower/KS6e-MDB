@@ -11,7 +11,7 @@ void init_SPI()
 {
 
     SPI.begin();
-    
+
     SPI.beginTransaction(SPISettings(9600, MSBFIRST, SPI_MODE0));
 
     pinMode(CHIPSELECT, OUTPUT);
@@ -51,15 +51,15 @@ void send_SPI(uint32_t id, uint8_t buf[])
 
     }
 
-    for (int i = 0; i < msg.len; i++)
-    {
+    // for (int i = 0; i < msg.len; i++)
+    // {
 
-        Serial.print("buffer ");
-        Serial.print(i);
-        Serial.print(": ");
-        Serial.println(msg.buf[i]);
+    //     Serial.print("buffer ");
+    //     Serial.print(i);
+    //     Serial.print(": ");
+    //     Serial.println(msg.buf[i]);
 
-    }
+    // }
 
     // transfer identity
 
