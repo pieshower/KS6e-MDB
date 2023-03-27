@@ -31,10 +31,10 @@ void send_SPI(uint32_t id, uint8_t buf[])
 
     // Load buffer with Temperature array 
 
-    for (int i = 0; i < CHANNELS; i++)
+    for (int INDEX = 0; INDEX < CHANNELS; INDEX++)
     {
 
-        msg.buf[i] = buf[i];
+        msg.buf[INDEX] = buf[INDEX];
 
     }
 
@@ -44,10 +44,10 @@ void send_SPI(uint32_t id, uint8_t buf[])
 
     // transfer data
 
-    for (int i = msg.len; i > 0; i--)
+    for (int INDEX = msg.len; INDEX > 0; INDEX--)
     {
 
-        SPI.transfer(msg.buf[i - 1]);
+        SPI.transfer(msg.buf[INDEX - 1]);
 
     }
 
