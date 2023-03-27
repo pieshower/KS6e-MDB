@@ -11,6 +11,7 @@ void init_SPI()
 {
 
     SPI.begin();
+    
     SPI.beginTransaction(SPISettings(9600, MSBFIRST, SPI_MODE0));
 
     pinMode(CHIPSELECT, OUTPUT);
