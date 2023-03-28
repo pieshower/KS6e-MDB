@@ -40,23 +40,24 @@
 
 
 
-
-int main(void)
+void setup()
 {
 
     Serial.begin(9600);
 
     init_SPI();
 
-    while(true)
-    {
+}
 
-        batteryTemp.updateTemp();
-        batteryTemp.AvgTemp();
 
-        send_SPI(CELL_1, batteryTemp.getTemp());
 
-    }
+void loop()
+{
+
+    batteryTemp.updateTemp();
+    batteryTemp.AvgTemp();
+
+    send_SPI(CELL_1, batteryTemp.getTemp());
 
 }
 

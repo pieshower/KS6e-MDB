@@ -1,5 +1,5 @@
 
-
+#include <Arduino.h>
 #include "TempSensor.h"
 #include "MDB_Labels.h"
 
@@ -8,8 +8,8 @@
 // ------------------------------------------------
 // Input pins for the NANO
 
-//                  A    B    C    D
- int tempPins[] = {PF7, PF6, PF5, PF4};
+//                 A   B   C   D
+ int tempPins[] = {A0, A1, A2, A3};
 
 
 
@@ -23,7 +23,12 @@ void TempSensor::updateTemp()
     for (uint8_t CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
     {
 
-        this->tempSensor.temp[CHANNEL] = this->data.read(tempPins[CHANNEL]);
+        this->tempSensor.temp[CHANNEL] = analogRead(tempPins[CHANNEL]);
+
+        Serial.print("Data ");
+        Serial.print(CHANNEL);
+        Serial.print(": ");
+        Serial.println(this->tempSensor.temp[CHANNEL]);
 
     }
 
@@ -76,7 +81,7 @@ uint8_t TempSensor::getAvgTemp()
 uint8_t TempSensor::getMinTemp()
 {
 
-
+    return 0;
 
 }
 
@@ -85,6 +90,6 @@ uint8_t TempSensor::getMinTemp()
 uint8_t TempSensor::getMaxTemp()
 {
 
-
+    return 0;
 
 }

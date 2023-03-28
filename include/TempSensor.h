@@ -14,9 +14,7 @@
 #ifndef TEMPSENSOR_H
 #define TEMPSENSOR_H
 
-
-#include "AnalogRead.h"
-
+#include <Arduino.h>
 
 // -------------------------------------------------
 // Number of total channels
@@ -58,13 +56,11 @@ private:
 
     temperature tempSensor;
 
-    AnalogRead data;
-
 public:
 
     TempSensor() {};
 
-    ~TempSensor() {delete this;};
+    ~TempSensor() {};
 
     void updateTemp();
 
@@ -81,7 +77,7 @@ public:
 };
 
 
-extern TempSensor batteryTemp;
+static TempSensor batteryTemp;
 
 
 #endif
