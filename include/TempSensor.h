@@ -64,17 +64,24 @@ public:
 
     TempSensor() {};
 
-    ~TempSensor() {};
+    ~TempSensor() {delete this;};
 
     void updateTemp();
 
-    uint8_t getTemp(int channel);
+    uint8_t *getTemp();
 
     void AvgTemp();
 
-    uint8_t *getAvgTemp();
+    uint8_t getAvgTemp();
+
+    uint8_t getMinTemp();
+
+    uint8_t getMaxTemp();
 
 };
+
+
+extern TempSensor batteryTemp;
 
 
 #endif
