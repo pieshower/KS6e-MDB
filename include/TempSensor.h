@@ -40,7 +40,11 @@ typedef struct temperature
 
     uint8_t temp[CHANNELS] = { 0 };
 
-    uint8_t avgTemp[CHANNELS] = { 0 };
+    uint8_t avgTemp = 0;
+
+    uint8_t minTemp = 0;
+
+    uint8_t maxTemp = 0;
 
 } temperature;
 
