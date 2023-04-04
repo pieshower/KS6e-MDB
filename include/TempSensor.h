@@ -2,11 +2,9 @@
 
 /*
 
-    ABCD corresponds to the average TEMP of 3 cells
-    per letter, or input. Each pin is an analog voltage
-    representation of the average temperature of 3 cells.
-
-    Am I correct on this?
+    The MUX takes in 12 analog voltages and
+    and outputs 1 analog voltage depending 
+    on which channel you have selected.
 
 */
 
@@ -14,23 +12,30 @@
 #ifndef TEMPSENSOR_H
 #define TEMPSENSOR_H
 
-
-#include "AnalogRead.h"
-
+#include <Arduino.h>
 
 // -------------------------------------------------
 // Number of total channels
 
-#define  CHANNELS  4
+#define   CHANNELS   12
 
 // --------------------------------------------------
-// Each channel is the average temp of
-// 3 packs
+// Channels for each CELL in a MODULE
 
-#define  CHANNEL1  0
-#define  CHANNEL2  1
-#define  CHANNEL3  2
-#define  CHANNEL4  3
+#define   CHANNEL1    B0000
+#define   CHANNEL2    B1000
+#define   CHANNEL3    B0100
+#define   CHANNEL4    B1100
+#define   CHANNEL5    B0010
+#define   CHANNEL6    B1010
+#define   CHANNEL7    B0110
+#define   CHANNEL8    B1110
+#define   CHANNEL9    B0001
+#define  CHANNEL10    B1001
+#define  CHANNEL11    B0101
+#define  CHANNEL12    B1101
+
+#define     TEMPIN    A7
 
 // --------------------------------------------------
 // Just a more organized way of storing the temps
@@ -38,11 +43,20 @@
 typedef struct temperature
 {
 
-    uint8_t temp[CHANNELS] = { 0 };
+    uint8_t temp[8] = { 0 };
 
-    uint8_t avgTemp[CHANNELS] = { 0 };
+    uint8_t minTemp = 0;
+
+    uint8_t maxTemp = 0;
 
 } temperature;
+
+typedef struct module
+{
+
+    temperature senceTemp;
+
+} module;
 
 // -------------------------------------
 // Handles the temperature sensing
@@ -52,25 +66,37 @@ class TempSensor
 
 private:
 
-    temperature tempSensor;
-
-    AnalogRead data;
+    module Module_HALF1;
+    module Module_HALF2;
 
 public:
 
-    TempSensor() {};
+    TempSensor();
 
     ~TempSensor() {};
 
     void updateTemp();
 
-    uint8_t getTemp(int channel);
+    void updateMinTemp();
 
-    void AvgTemp();
+    void updateMaxTemp();
 
-    uint8_t *getAvgTemp();
+    uint8_t *getTempModuleHALF1();
+    
+    uint8_t *getTempModuleHALF2();
 
+    uint8_t getMinTempModuleHALF1();
+
+    uint8_t getMinTempModuleHALF2();
+
+    uint8_t getMaxTempModuleHALF1();
+
+    uint8_t getMaxTempModuleHALF2();
+ 
 };
+
+
+static TempSensor Battery_Module;
 
 
 #endif

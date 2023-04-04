@@ -10,15 +10,23 @@
 // -------------------------------------
 // CAN IDs for each cell
 
-#define  CELL_1      0xB0
-#define  CELL_2      0xB1
-#define  CELL_3      0xB2
-#define  CELL_4      0xB3
-#define  CELL_5      0xB4
-#define  CELL_6      0xB5
-#define  CELL_7      0xB6
-#define  CELL_8      0xB7
-#define  CELL_9      0xB8
+#define  MODULE_1_A      0xB0
+#define  MODULE_1_B      0xB1
+
+#define  MODULE_2_A      0xB2
+#define  MODULE_2_B      0xB3
+
+#define  MODULE_3_A      0xB4
+#define  MODULE_3_B      0xB5
+
+#define  MODULE_4_A      0xB6
+#define  MODULE_4_B      0xB7
+
+#define  MODULE_5_A      0xB8
+#define  MODULE_5_B      0xB9
+
+#define  MODULE_6_A      0xB10
+#define  MODULE_6_B      0xB11
 
 
 // ----------------------------------------

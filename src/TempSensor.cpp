@@ -1,25 +1,31 @@
 
 
+#include <Arduino.h>
 #include "TempSensor.h"
 #include "MDB_Labels.h"
 
 
+// ---------------------------------------------------------------------
+// Channel Identities in a array
 
-// ------------------------------------------------
-// Input pins for the NANO
-
-//                 A   B   C   D
-// int tempPins[] = {18, 19, 20, 21};
-
-
-// ---------------------------------------------------
-// Input pins for the uno
-
-int tempPins[] = {PC0, PC1, PC2, PC3};
+uint8_t portPins[CHANNELS] = {CHANNEL1,  CHANNEL2,  CHANNEL3, CHANNEL4, 
+                              CHANNEL5,  CHANNEL6,  CHANNEL7, CHANNEL8,
+                              CHANNEL9, CHANNEL10, CHANNEL11, CHANNEL12};
 
 
+// ---------------------------------------------------------------------
+// Enables PORTF as an output (constructor)
 
-// ----------------------------------------------------
+TempSensor::TempSensor()
+{
+
+    DDRF &= ~(0x0F << 4);
+
+}
+
+
+
+// ------------------------------------------------------------------------
 // Updates the temps from each pins into an array
 
 void TempSensor::updateTemp()
@@ -28,66 +34,180 @@ void TempSensor::updateTemp()
     for (int CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
     {
 
-        this->tempSensor.temp[CHANNEL] = this->data.read(tempPins[CHANNEL]);
+        if (CHANNEL < (CHANNELS / 2))
+        {
+
+            PORTF |= (portPins[CHANNEL] << 4);
+
+            delay(40);
+
+            this->Module_HALF1.senceTemp.temp[CHANNEL] = analogRead(TEMPIN);
+
+            delay(20);
+
+            PORTF &= ~(0x0F << 4);
+
+        }
+        else if (CHANNEL >= (CHANNELS / 2))
+        {
+
+            PORTF |= (portPins[CHANNEL] << 4);
+
+            delay(40);
+
+            this->Module_HALF2.senceTemp.temp[CHANNEL - (CHANNELS / 2)] = analogRead(TEMPIN);
+
+            delay(20);
+
+            PORTF &= ~(0x0F << 4);
+
+        }
 
     }
 
 }
 
 
-// ----------------------------------------------------
-// Returns the temperture of a channel (A B C D)
+// -------------------------------------------------------------------
+// Updates the min and max temperatures for a Module half
 
-uint8_t TempSensor::getTemp(int channel)
+void TempSensor::updateMinTemp()
 {
 
-    return this->tempSensor.temp[channel];
+    uint8_t minTempM1 = this->Module_HALF1.senceTemp.temp[CHANNEL1];
+    uint8_t minTempM2 = this->Module_HALF2.senceTemp.temp[CHANNEL1];
+
+    for (int CHANNEL = 0; CHANNEL < (CHANNELS / 2); CHANNEL++)
+    {
+
+        if (this->Module_HALF1.senceTemp.temp[CHANNEL] < minTempM1)
+        {
+
+            minTempM1 = this->Module_HALF1.senceTemp.temp[CHANNEL];
+
+        }
+
+    }
+
+    for (int CHANNEL = 0; CHANNEL < (CHANNELS / 2); CHANNEL++)
+    {
+
+        if (this->Module_HALF2.senceTemp.temp[CHANNEL] < minTempM2)
+        {
+
+            minTempM2 = this->Module_HALF2.senceTemp.temp[CHANNEL];
+
+        }
+
+    }
+
+    this->Module_HALF1.senceTemp.minTemp = minTempM1;
+    this->Module_HALF2.senceTemp.minTemp = minTempM2;
 
 }
 
 
-// ------------------------------------------------------
-// Averages all channels into one temperature reading
-
-void TempSensor::AvgTemp()
+void TempSensor::updateMaxTemp()
 {
 
-    uint8_t minTemp[CHANNELS] = { 0 };
-    uint8_t maxTemp[CHANNELS] = { 0 };
+    uint8_t maxTempM1 = this->Module_HALF1.senceTemp.temp[CHANNEL1];
+    uint8_t maxTempM2 = this->Module_HALF2.senceTemp.temp[CHANNEL1];
 
-    for (int CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
+    for (int CHANNEL = 0; CHANNEL < (CHANNELS / 2); CHANNEL++)
     {
 
-        minTemp[CHANNEL] = this->getTemp(CHANNEL); 
+        if (this->Module_HALF1.senceTemp.temp[CHANNEL] > maxTempM1)
+        {
+
+            maxTempM1 = this->Module_HALF1.senceTemp.temp[CHANNEL];
+
+        }
 
     }
 
-    this->updateTemp();
-
-    for (int CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
+    for (int CHANNEL = 0; CHANNEL < (CHANNELS / 2); CHANNEL++)
     {
 
-        maxTemp[CHANNEL] = this->getTemp(CHANNEL);
+        if (this->Module_HALF2.senceTemp.temp[CHANNEL] > maxTempM2)
+        {
+
+            maxTempM2 = this->Module_HALF2.senceTemp.temp[CHANNEL];
+
+        }
 
     }
 
-    for (int CHANNEL = 0; CHANNEL < CHANNELS; CHANNEL++)
-    {
-
-        this->tempSensor.avgTemp[CHANNEL] = (minTemp[CHANNEL] + maxTemp[CHANNEL]) / 2;
-
-    }
+    this->Module_HALF1.senceTemp.maxTemp = maxTempM1;
+    this->Module_HALF2.senceTemp.maxTemp = maxTempM2;
 
 }
 
 
-// ------------------------------------------------------
-// Returns an array of average temperatures
+// -----------------------------------------------------------------
+// Returns the temperatures for a Module half
 
-uint8_t *TempSensor::getAvgTemp()
+uint8_t *TempSensor::getTempModuleHALF1()
 {
 
-    return this->tempSensor.avgTemp;
+    this->Module_HALF1.senceTemp.temp[6] = this->getMinTempModuleHALF1();
+    this->Module_HALF1.senceTemp.temp[7] = this->getMaxTempModuleHALF1(); 
+
+    return this->Module_HALF1.senceTemp.temp;
 
 }
+
+
+uint8_t *TempSensor::getTempModuleHALF2()
+{
+
+    this->Module_HALF2.senceTemp.temp[6] = this->getMinTempModuleHALF1();
+    this->Module_HALF2.senceTemp.temp[7] = this->getMaxTempModuleHALF2();
+
+    return this->Module_HALF2.senceTemp.temp;
+
+}
+
+
+// ------------------------------------------------------------------
+// Returns the min and max of each module half
+
+uint8_t TempSensor::getMinTempModuleHALF1()
+{
+
+    return this->Module_HALF1.senceTemp.minTemp;
+
+}
+
+
+uint8_t TempSensor::getMinTempModuleHALF2()
+{
+
+    return this->Module_HALF2.senceTemp.minTemp;
+
+}
+
+
+uint8_t TempSensor::getMaxTempModuleHALF1()
+{
+
+    return this->Module_HALF1.senceTemp.maxTemp;
+
+}
+
+
+uint8_t TempSensor::getMaxTempModuleHALF2()
+{
+
+    return this->Module_HALF2.senceTemp.maxTemp;
+    
+}
+
+
+
+
+
+
+
+
+
 

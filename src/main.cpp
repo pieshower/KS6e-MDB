@@ -1,52 +1,47 @@
 
 /*
 
-    Code for MDB. Not sure if it works lol.
-    If I understand how the mux works then
-    it should give a four pin analog output
-    that is read and stored by the arduino
+    Code for the MDB. Updated proper MUX function
+    as well as getting the temperature of each cell
+    sent through CAN. Hope you enjoy! :)
 
-    Wrote something to output to SPI but I 
-    cannot test any further at home other then
-    just look at the output through a scope.
-
-    Wrote my own Analog Read class because stupid
-    Arduino would not let me call analogRead() 
-    outside of the loop() function and I wanted
-    my main() to look a certain way. 
-
-    GET REKT ;)
+    - pieshower
 
 */
+ 
 
 #include <Arduino.h>
+
 
 #include "TempSensor.h"
 #include "SPI_handle.h"
 #include "MDB_Labels.h"
 
 
-TempSensor batteryTemp;
-
-
-int main(void)
+void setup()
 {
 
-    Serial.begin(9600);
+    //Serial.begin(9600);
 
     init_SPI();
 
-    while(true)
-    {
-
-        batteryTemp.updateTemp();
-        batteryTemp.AvgTemp();
-
-        send_SPI(CELL_1, batteryTemp.getAvgTemp());
-
-    }
-
+    //while (!Serial);
+    
 }
 
+
+void loop()
+{
+
+    Battery_Module.updateTemp();
+    
+    Battery_Module.updateMinTemp();
+    Battery_Module.updateMaxTemp();
+
+    delay(50);
+
+    send_SPI(MODULE_1_A, MODULE_1_B, Battery_Module.getTempModuleHALF1(), Battery_Module.getTempModuleHALF2());
+
+}
 
 

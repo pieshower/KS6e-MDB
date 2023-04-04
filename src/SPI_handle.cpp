@@ -5,68 +5,95 @@
 
 
 // ------------------------------------------------
-// Initializes the SPI pins, mode, and CS
+// Initializes the SPI pins, CAN, and CS
 
 void init_SPI()
 {
 
     SPI.begin();
 
-    SPI.beginTransaction(SPISettings(9600, MSBFIRST, SPI_MODE0));
-
-    pinMode(CHIPSELECT, OUTPUT);
+    CAN.begin(CAN_BPS_500K);
 
 }
 
 
 // -------------------------------------------------
-// Sends through SPI. Maybe this works?
+// Sends through SPI.
 
-void send_SPI(uint32_t id, uint8_t buf[])
+void send_SPI(uint32_t id_1, uint32_t id_2, uint8_t buf_1[], uint8_t buf_2[])
 {
 
-    SPI_message_t msg;
+    CAN_Frame msg_1;
+    CAN_Frame msg_2;
 
-    msg.id |= (uint32_t)id;
+    msg_1.id = id_1;
+    msg_2.id = id_2;
 
-    // Load buffer with Temperature array 
+    msg_1.extended = false;
+    msg_2.extended = false;
 
-    for (int INDEX = 0; INDEX < CHANNELS; INDEX++)
+    msg_1.length = 8;
+    msg_2.length = 8;
+
+
+    // Load buffers with Temperature array 
+
+    for (uint8_t INDEX = 0; INDEX < (CHANNELS - 4); INDEX++)
     {
 
-        msg.buf[INDEX] = buf[INDEX];
+        msg_1.data[INDEX] = buf_1[INDEX];
+        msg_2.data[INDEX] = buf_2[INDEX];
 
     }
 
-    // enable CAN controller to recieve data
+#if DEBUG
 
-    digitalWrite(CHIPSELECT, HIGH);
-
-    // transfer data
-
-    for (int INDEX = msg.len; INDEX > 0; INDEX--)
+    for (uint8_t INDEX = 0; INDEX < (CHANNELS / 2); INDEX++)
     {
 
-        SPI.transfer(msg.buf[INDEX - 1]);
+        Serial.print("Data1 ");
+        Serial.print(INDEX);
+        Serial.print(": ");
+        Serial.print(msg_1.data[INDEX]);
+        Serial.println();
 
     }
 
-    // for (int i = 0; i < msg.len; i++)
-    // {
+    Serial.print("Min 1: ");
+    Serial.println(msg_1.data[6]);
 
-    //     Serial.print("buffer ");
-    //     Serial.print(i);
-    //     Serial.print(": ");
-    //     Serial.println(msg.buf[i]);
+    Serial.print("Max 1: ");
+    Serial.println(msg_1.data[7]);
 
-    // }
+    for (uint8_t INDEX = 0; INDEX < (CHANNELS / 2); INDEX++)
+    {
 
-    // transfer identity
+        Serial.print("Data2 ");
+        Serial.print(INDEX);
+        Serial.print(": ");
+        Serial.print(msg_2.data[INDEX]);
+        Serial.println();
 
-    SPI.transfer(msg.len);
-    SPI.transfer((uint32_t)msg.id);
+    }
 
-    digitalWrite(CHIPSELECT, LOW);
+    Serial.print("Min 2: ");
+    Serial.println(msg_2.data[6]);
+
+    Serial.print("Max 2: ");
+    Serial.println(msg_2.data[7]);
+
+#endif
+
+
+    // Send the messages through SPI
+
+
+
+    CAN.write(msg_1);
+
+    delay(10);
+
+    CAN.write(msg_2);
 
 }
 
